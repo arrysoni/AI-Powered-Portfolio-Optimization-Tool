@@ -1,99 +1,55 @@
 import streamlit as st
 import yfinance as yf
-import requests
-import matplotlib.pyplot as plt
 import pandas as pd
-from pypfopt import EfficientFrontier, expected_returns, risk_models
+import matplotlib.pyplot as plt
+from pypfopt import EfficientFrontier, risk_models, expected_returns
 
-# ✅ Your Finnhub API key
-# Replace with your real one
-FINNHUB_API_KEY = "d0ma9c1r01qkesvji180d0ma9c1r01qkesvji18g"
-
-# ✅ Search function (only keep tickers with no dot — i.e., US tickers like TSLA, AAPL)
-
-
-def search_symbols(query):
-    url = f"https://finnhub.io/api/v1/search?q={query}&token={FINNHUB_API_KEY}"
-    res = requests.get(url)
-    results = res.json().get("result", [])
-    return [r["symbol"] for r in results if r["type"] == "Common Stock" and "." not in r["symbol"]]
-
-
-# ✅ UI
+# App title
 st.title("📈 AI-Powered Portfolio Optimizer")
 
-# Set up session state to remember selected tickers
-if "selected_tickers" not in st.session_state:
-    st.session_state.selected_tickers = []
+# Sidebar inputs
+st.sidebar.header("User Input")
+ticker = st.sidebar.text_input("Enter Ticker Symbol", value="AAPL")
+start = st.sidebar.date_input("Start Date", value=pd.to_datetime("2020-01-01"))
+end = st.sidebar.date_input("End Date", value=pd.to_datetime("today"))
 
-search_term = st.text_input("Type a company name or ticker symbol:")
+# Download stock data
+raw_data = yf.download(ticker, start=start, end=end)
 
-if search_term:
-    matches = search_symbols(search_term)
-    selected_now = st.multiselect(
-        "Select stocks to include from search:", matches)
-    if st.button("➕ Add to Portfolio"):
-        for ticker in selected_now:
-            if ticker not in st.session_state.selected_tickers:
-                st.session_state.selected_tickers.append(ticker)
+# Display the raw data to inspect structure
+st.write("Raw data preview:")
+st.write(raw_data.head())
 
-# Display selected tickers
-if st.session_state.selected_tickers:
-    st.success(
-        f"📊 Current selection: {', '.join(st.session_state.selected_tickers)}")
-    if st.button("🔁 Clear Selection"):
-        st.session_state.selected_tickers = []
+# Check for 'Adj Close' column safely
+if "Adj Close" in raw_data.columns:
+    data = raw_data["Adj Close"]
+else:
+    st.error(
+        f"'Adj Close' data not found for {ticker}. Available columns: {raw_data.columns.tolist()}")
+    st.stop()
 
-tickers = st.session_state.selected_tickers
+# Calculate expected returns and sample covariance
+returns = raw_data[["Adj Close"]].pct_change().dropna()
+mu = expected_returns.mean_historical_return(returns)
+S = risk_models.sample_cov(returns)
 
+# Portfolio Optimization
+ef = EfficientFrontier(mu, S)
+weights = ef.max_sharpe()
+cleaned_weights = ef.clean_weights()
+st.subheader("Recommended Portfolio Allocation")
+st.write(cleaned_weights)
 
-# ✅ When tickers are selected, fetch and process data
-if tickers:
-    st.success(f"Fetching price data for: {', '.join(tickers)}")
+# Plotting pie chart
+fig, ax = plt.subplots()
+ax.pie(cleaned_weights.values(), labels=cleaned_weights.keys(), autopct='%1.1f%%')
+ax.axis("equal")
+st.pyplot(fig)
 
-    raw_data = yf.download(tickers, start="2020-01-01")
+# Display performance
+expected_annual_return, annual_volatility, sharpe_ratio = ef.portfolio_performance()
 
-    # Check if data is valid
-    if raw_data.empty:
-        st.error("⚠️ No data returned from yfinance. Please try different tickers.")
-        st.stop()
-
-    # Handle single vs multi ticker
-    if isinstance(raw_data.columns, pd.MultiIndex):
-        data = raw_data["Close"]
-    else:
-        data = raw_data[["Close"]]
-        data.columns = tickers
-
-    st.subheader("📉 Historical Prices")
-    st.line_chart(data)
-
-    st.subheader("📊 Optimized Portfolio")
-    mu = expected_returns.mean_historical_return(data)
-    S = risk_models.sample_cov(data)
-    ef = EfficientFrontier(mu, S)
-    weights = ef.max_sharpe()
-    cleaned_weights = ef.clean_weights()
-    st.write("Recommended Allocation:", cleaned_weights)
-
-    # 🥧 Pie chart
-    non_zero_alloc = {k: v for k, v in cleaned_weights.items() if v > 0}
-    fig, ax = plt.subplots()
-    ax.pie(non_zero_alloc.values(),
-           labels=non_zero_alloc.keys(), autopct="%1.1f%%")
-    ax.axis("equal")
-    st.pyplot(fig)
-
-    # 💵 Investment breakdown
-    st.subheader("💵 Investment Breakdown")
-    total = st.number_input("Total amount to invest:",
-                            min_value=0.0, value=100000.0, step=1000.0)
-    breakdown = {k: round(v * total, 2) for k, v in non_zero_alloc.items()}
-    st.table(breakdown)
-
-    # 📈 Portfolio metrics
-    st.subheader("📈 Portfolio Metrics")
-    perf = ef.portfolio_performance()
-    st.metric("Expected Annual Return", f"{perf[0]*100:.2f}%")
-    st.metric("Annual Volatility", f"{perf[1]*100:.2f}%")
-    st.metric("Sharpe Ratio", f"{perf[2]:.2f}")
+st.subheader("Portfolio Performance")
+st.write(f"Expected annual return: {expected_annual_return*100:.2f}%")
+st.write(f"Annual volatility: {annual_volatility*100:.2f}%")
+st.write(f"Sharpe Ratio: {sharpe_ratio:.2f}")
