@@ -20,13 +20,14 @@ raw_data = yf.download(ticker, start=start, end=end)
 st.write("Raw data preview:")
 st.write(raw_data.head())
 
-# Check for 'Adj Close' column safely
-if "Adj Close" in raw_data.columns:
-    data = raw_data["Adj Close"]
+# Check for 'Close' column safely
+if ("Close", ticker) in raw_data.columns:
+    data = raw_data[("Close", ticker)]
 else:
     st.error(
-        f"'Adj Close' data not found for {ticker}. Available columns: {raw_data.columns.tolist()}")
+        f"'Close' data not found for {ticker}. Available coluSmns: {raw_data.columns.tolist()}")
     st.stop()
+
 
 # Calculate expected returns and sample covariance
 returns = raw_data[["Adj Close"]].pct_change().dropna()
