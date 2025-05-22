@@ -93,14 +93,17 @@ $env:POLYGON_API_KEY="your_actual_key_here"
 <p align="center"> <img src="images/sample-4.png" width="700"/> </p>
 
 ## 🙌 Acknowledgments
-Polygon.io for providing market data
+[Polygon.io](https://polygon.io/) for providing market data
 
-PyPortfolioOpt for financial modeling
+[PyPortfolioOpt](https://pyportfolioopt.readthedocs.io/) for financial modeling
 
-Streamlit for effortless UI deployment
+[Streamlit](https://streamlit.io/) for effortless UI deployment
 
 ## 📬 Author
 Aarya Soni
+🔗 [LinkedIn](www.linkedin.com/in/aaryasoni)
+• 💼 [Live App](https://ai-powered-portfolio-optimization-tool.streamlit.app)
+
 
 
 
