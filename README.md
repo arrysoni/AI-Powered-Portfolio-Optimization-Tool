@@ -101,7 +101,7 @@ $env:POLYGON_API_KEY="your_actual_key_here"
 
 ## 📬 Author
 Aarya Soni
-🔗 [LinkedIn](www.linkedin.com/in/aaryasoni)
+🔗 [LinkedIn](https://www.linkedin.com/in/aaryasoni/)
 • 💼 [Live App](https://ai-powered-portfolio-optimization-tool.streamlit.app)
 
 
