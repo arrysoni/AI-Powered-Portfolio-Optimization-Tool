@@ -141,39 +141,36 @@ if not price_data.empty:
     st.metric("Equal-Weighted Volatility", f"{eq_volatility*100:.2f}%")
     st.metric("Equal-Weighted Sharpe Ratio", f"{eq_sharpe:.2f}")
 
-else:
-    st.error("❌ No data could be fetched. Please check the tickers or date range.")
+    # --- One-step PDF Download Button ---
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmpfile:
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Times", size=12)
+        pdf.cell(200, 10, txt="Portfolio Optimization Summary",
+                 ln=True, align="C")
 
-# --- One-step PDF Download Button ---
-with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmpfile:
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Times", size=12)
-    pdf.cell(200, 10, txt="Portfolio Optimization Summary", ln=True, align="C")
+        pdf.ln(10)
+        pdf.set_font("Times", size=10)
+        pdf.cell(200, 10, txt="Suggested Weights:", ln=True)
+        for ticker, weight in cleaned_weights.items():
+            pdf.cell(
+                200, 8, txt=f"{ticker}: {round(weight * 100, 2)}%", ln=True)
 
-    # Portfolio Weights
-    pdf.ln(10)
-    pdf.set_font("Times", size=10)
-    pdf.cell(200, 10, txt="Suggested Weights:", ln=True)
-    for ticker, weight in cleaned_weights.items():
-        pdf.cell(200, 8, txt=f"{ticker}: {round(weight * 100, 2)}%", ln=True)
+        pdf.ln(10)
+        pdf.cell(
+            200, 10, txt=f"Expected Annual Return: {expected_return*100:.2f}%", ln=True)
+        pdf.cell(
+            200, 10, txt=f"Annual Volatility: {volatility*100:.2f}%", ln=True)
+        pdf.cell(200, 10, txt=f"Sharpe Ratio: {sharpe:.2f}", ln=True)
 
-    # Performance Metrics
-    pdf.ln(10)
-    pdf.set_font("Times", size=10)
-    pdf.cell(
-        200, 10, txt=f"Expected Annual Return: {expected_return*100:.2f}%", ln=True)
-    pdf.cell(200, 10, txt=f"Annual Volatility: {volatility*100:.2f}%", ln=True)
-    pdf.cell(200, 10, txt=f"Sharpe Ratio: {sharpe:.2f}", ln=True)
-
-    # Save PDF and offer immediate download
-    pdf.output(tmpfile.name)
-
-    with open(tmpfile.name, "rb") as f:
-        st.download_button(
-            "📥 Download PDF", f, file_name="portfolio_summary.pdf", mime="application/pdf")
-
-    os.remove(tmpfile.name)
+        pdf.output(tmpfile.name)
+        with open(tmpfile.name, "rb") as f:
+            st.download_button(
+                "📥 Download PDF", f, file_name="portfolio_summary.pdf", mime="application/pdf")
+        os.remove(tmpfile.name)
 
     st.markdown("---")
     st.caption("Built by Aarya Soni | Powered by Polygon.io + PyPortfolioOpt")
+
+else:
+    st.error("❌ No data could be fetched. Please check the tickers or date range.")
