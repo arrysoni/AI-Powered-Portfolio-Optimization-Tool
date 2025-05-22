@@ -37,7 +37,7 @@ st.sidebar.subheader("🎯 Risk Control")
 max_weight = st.sidebar.slider(
     "Max weight per stock", 0.2, 1.0, 0.6, step=0.05)
 
-api_key = os.getenv("94Ul4LHbkEbMafw89pgqtWZCnlxxoMmZ")
+api_key = os.getenv("POLYGON_API_KEY")
 price_data = pd.DataFrame()
 
 
