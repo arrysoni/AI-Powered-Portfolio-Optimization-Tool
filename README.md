@@ -87,7 +87,7 @@ $env:POLYGON_API_KEY="your_actual_key_here"
 
 📄 Sample Output
 
-<p align="center"> <img src="https://user-images.githubusercontent.com/YOUR_SCREENSHOT_URL_HERE.png" width="700"/> </p>
+<p align="center"> <img src="AI-Powered-Portfolio-Optimization-Tool/sample-1.png" width="700"/> </p>
 <p align="center"> <img src="https://user-images.githubusercontent.com/YOUR_SCREENSHOT_URL_HERE.png" width="700"/> </p>
 <p align="center"> <img src="https://user-images.githubusercontent.com/YOUR_SCREENSHOT_URL_HERE.png" width="700"/> </p>
 
