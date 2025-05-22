@@ -1,100 +1,107 @@
-📈 AI-Powered Portfolio Optimization Tool
-🔍 Overview
-This Streamlit-based web app allows users to build custom stock portfolios, fetch real-time adjusted close prices, and receive optimized investment recommendations using Modern Portfolio Theory.
+# 📈 AI-Powered Portfolio Optimization Tool
 
-Leveraging the powerful PyPortfolioOpt library and real-time data from Polygon.io, this tool computes optimal allocations to maximize the Sharpe Ratio, while offering:
+Welcome to the AI-Powered Portfolio Optimization Tool — a web application built using **Streamlit**, **Polygon.io**, and **PyPortfolioOpt** that helps users create optimized stock portfolios using **Modern Portfolio Theory**.
 
-Custom stock selection
+🔗 **Live App:** [Click to Launch](https://ai-powered-portfolio-optimization-tool.streamlit.app)
 
-Adjustable risk exposure
+---
 
-Date range configuration
+## 🚀 Overview
 
-Real-time visualizations and analytics
+This tool allows users to:
 
-Downloadable CSV and PDF reports
+- Select custom stock tickers
+- Define a custom date range
+- Control diversification using a max-weight slider
+- View optimized portfolio allocations
+- Compare with equal-weighted portfolio performance
+- Export results as **CSV and PDF reports**
 
-Equal-weighted portfolio comparison
+---
 
-🚀 Live Demo
-🌐 Click here to use the live app
+## ✨ Features
 
-Replace the URL with your deployed app link.
+| Feature                         | Description                                                           |
+|----------------------------------|-----------------------------------------------------------------------|
+| 🔍 **Custom Ticker Input**       | Enter stock tickers like `AAPL, TSLA, MSFT` to define your portfolio |
+| 📆 **Date Range Selection**      | Choose any historical window for analysis                            |
+| 🎯 **Max Weight Slider**         | Limit exposure to individual stocks                                  |
+| 📊 **Line & Pie Charts**         | Visualize stock trends and allocation split                          |
+| 📈 **Optimization Engine**       | Maximize Sharpe Ratio using PyPortfolioOpt                           |
+| 📥 **CSV + PDF Export**          | Download portfolio weights + performance summary                     |
+| 🔁 **Equal-Weighted Comparison** | See how your optimized portfolio stacks up against a naive one       |
 
-📊 Features
-Feature	Description
-🔎 Ticker Input	Enter any number of stock tickers (comma-separated)
-📆 Date Range	Select a custom range for backtesting performance
-🎯 Risk Control	Adjust maximum weight per stock to reflect your risk appetite
-📈 Price Visualization	Line chart of historical adjusted close prices
-💼 Optimized Weights	Max Sharpe ratio portfolio using mean-variance optimization
-🥧 Portfolio Pie Chart	See your optimized allocations visually
-📥 CSV & PDF Downloads	Export weights and metrics with one click
-🔁 Equal-Weighted Comparison	Compare against a naïve equal-weighted strategy
+---
 
-📂 Project Structure
-bash
-Copy
-Edit
-├── portfolio_app.py         # Main Streamlit app
-├── requirements.txt         # All required dependencies
-├── runtime.txt
-├── .streamlit               # UI customization
-   ├── config.toml
-├── README.md                # You're here!
-🛠️ Setup Instructions
-🔸 1. Clone the Repository
-bash
-Copy
-Edit
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO-NAME.git
-cd YOUR-REPO-NAME
-🔸 2. Install Dependencies
-bash
-Copy
-Edit
+## 🧠 Optimization Logic
+
+This app uses **Modern Portfolio Theory** via the [PyPortfolioOpt](https://github.com/robertmartin8/PyPortfolioOpt) library:
+
+- Calculates expected returns using historical data
+- Estimates risk with sample covariance matrix
+- Uses convex optimization to maximize the **Sharpe Ratio**
+- Allows user-defined weight bounds to reflect diversification preferences
+
+---
+
+## 📦 Tech Stack
+
+- [Streamlit](https://streamlit.io/)
+- [Polygon.io Market Data](https://polygon.io/)
+- [PyPortfolioOpt](https://pyportfolioopt.readthedocs.io/)
+- `pandas`, `matplotlib`, `fpdf`, `requests`
+
+---
+
+## 🛠️ How to Run Locally
+
+```bash
+git clone https://github.com/<your-username>/ai-powered-portfolio-optimization-tool.git
+cd ai-powered-portfolio-optimization-tool
 pip install -r requirements.txt
-🔸 3. Run Locally
+streamlit run portfolio_app.py
+```
+
+## 🔐 Setting Your API Key
+To keep your Polygon API key secure, use one of the following:
+
+✅ For Streamlit Cloud
+Create a secrets file at .streamlit/secrets.toml and add:
+toml
+Copy
+Edit
+POLYGON_API_KEY = "your_actual_key_here"
+
+✅ For Local Testing (Linux/Mac)
+In your terminal before running the app:
 bash
 Copy
 Edit
-streamlit run portfolio_app.py
-🔐 Polygon.io API Key Setup
-Replace the value of api_key in portfolio_app.py with your own:
+export POLYGON_API_KEY="your_actual_key_here"
 
-python
+Or for Windows PowerShell:
+powershell
 Copy
 Edit
-api_key = "YOUR_POLYGON_API_KEY"
-Or better, store it using st.secrets["api_key"] if deploying securely on Streamlit Cloud.
+$env:POLYGON_API_KEY="your_actual_key_here"
 
-📦 Requirements
-All dependencies are listed in requirements.txt, but key libraries include:
+📄 Sample Output
 
-streamlit
+<p align="center"> <img src="https://user-images.githubusercontent.com/YOUR_SCREENSHOT_URL_HERE.png" width="700"/> </p>
+<p align="center"> <img src="https://user-images.githubusercontent.com/YOUR_SCREENSHOT_URL_HERE.png" width="700"/> </p>
+<p align="center"> <img src="https://user-images.githubusercontent.com/YOUR_SCREENSHOT_URL_HERE.png" width="700"/> </p>
 
-PyPortfolioOpt
+## 🙌 Acknowledgments
+Polygon.io for providing market data
 
-matplotlib, pandas, requests, fpdf
+PyPortfolioOpt for financial modeling
 
-🧠 Methodology
-The optimization is powered by Modern Portfolio Theory, where:
+Streamlit for effortless UI deployment
 
-Expected return is calculated using historical mean returns
+## 📬 Author
+Aarya Soni
+🔗 LinkedIn • 💼 Live App
 
-Risk is modeled using sample covariance of asset returns
 
-Sharpe Ratio is maximized using convex optimization
 
-Constraints allow bounding stock allocations (e.g., max 60%)
-
-📄 License
-MIT License. Free for personal and commercial use. Attribution appreciated.
-
-🙌 Acknowledgments
-Polygon.io for market data APIs
-
-PyPortfolioOpt by Robert Martin
-
-Streamlit for fast deployment
 
